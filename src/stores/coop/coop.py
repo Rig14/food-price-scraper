@@ -43,7 +43,7 @@ class Coop(Store):
         """Get all items from a category."""
         url = f"https://api.vandra.ecoop.ee/supermarket/products?category={str(category_id)}&language=et&page="
 
-        result = []
+        result: list[Item] = []
         # loop through all pages
         page_nr = 1
         while True:
@@ -55,19 +55,23 @@ class Coop(Store):
                 break
 
             for item in data:
-
                 name = item["name"]
                 code = None  # Coop does not have barcodes in their API
                 price = item["price"] * 100  # convert to cents
                 quantity = price / (item["base_price"] * 100)
-
                 unit = item["base_unit"]
                 url = f"https://vandra.ecoop.ee/et/toode/{item['id2']}-{item['slug']}"
-
                 result.append(
-                    Item(
-                        name, self.name, code, price, unit, category_name, quantity, url
-                    )
+                    {
+                        "name": name,
+                        "store_name": self.name,
+                        "code": code,
+                        "price": price,
+                        "unit": unit,
+                        "category": category_name,
+                        "quantity": quantity,
+                        "url": url,
+                    }
                 )
 
             # if last page
