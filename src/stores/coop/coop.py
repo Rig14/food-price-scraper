@@ -57,10 +57,12 @@ class Coop(Store):
             for item in data:
                 name = item["name"]
                 code = None  # Coop does not have barcodes in their API
-                price = item["price"] * 100  # convert to cents
-                quantity = price / (item["base_price"] * 100)
+                price = item["price"]
+                base_price = item["base_price"]
+                quantity = price / base_price
                 unit = item["base_unit"]
                 url = f"https://vandra.ecoop.ee/et/toode/{item['id2']}-{item['slug']}"
+                image = item["image"]
                 result.append(
                     {
                         "name": name,
@@ -71,6 +73,8 @@ class Coop(Store):
                         "category": category_name,
                         "quantity": quantity,
                         "url": url,
+                        "base_price": base_price,
+                        "image": image,
                     }
                 )
 

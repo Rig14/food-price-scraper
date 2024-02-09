@@ -11,8 +11,10 @@ class Item(TypedDict):
     name: str
     store_name: str
     code: str | None
-    price: int
+    price: float
     unit: str
     category: str
-    quantity: int
+    quantity: float
     url: str
+    image: str | None
+    base_price: float
