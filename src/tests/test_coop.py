@@ -1,6 +1,5 @@
 """Coop store scraper tests."""
 
-import os
 import random
 import requests
 
