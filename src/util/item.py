@@ -6,7 +6,7 @@ class Item:
     Stores information about a food item.
     """
 
-    def __init__(self, name, code, price, category, quantity):
+    def __init__(self, name: str, code: str, price: int, category: str, quantity: int):
         self.name = name
         self.code = code
         self.price = price
