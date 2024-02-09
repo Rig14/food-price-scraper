@@ -14,10 +14,15 @@ class Coop(Store):
         self.name = "Coop"
 
     def get_items(self) -> list[Item]:
-        """Returns all the food items that Coop web store has."""
-        return [
-            Item("Milk", "123", 199, "Dairy", 10),
-        ]
+        """Returns all the food items Coop web store has."""
+        categories = self._get_categories()
+
+        items = []
+
+        for category_name, category_id in categories.items():
+            items.extend(self._get_items_from_category(category_name, category_id))
+
+        return items
 
     def _get_categories(self) -> dict[str, int]:
         """Get category names and their respective ids."""
