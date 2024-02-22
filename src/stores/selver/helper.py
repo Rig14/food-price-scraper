@@ -1,3 +1,5 @@
+"""Helper functions for the Selver API."""
+
 import json
 import os
 
