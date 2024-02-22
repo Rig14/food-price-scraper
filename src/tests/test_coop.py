@@ -5,7 +5,7 @@ import requests
 
 from src.stores.coop.coop import Coop
 
-################################################################################
+#################################
 # Setup
 coop = Coop()
 categories = coop._get_categories()
@@ -13,7 +13,7 @@ category_name, category_id = list(categories.items())[
     random.randint(0, len(categories) - 1)
 ]
 items = coop._get_items_from_category(category_name, category_id)
-################################################################################
+#################################
 
 
 def test_get_categories_has_categories():
