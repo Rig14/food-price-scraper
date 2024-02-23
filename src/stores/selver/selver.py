@@ -1,6 +1,7 @@
 """Selver store scraper."""
 
 import random
+import time
 import requests
 from src.util.item import Item
 from src.util.store import Store
@@ -13,11 +14,12 @@ class Selver(Store):
     def __init__(self):
         self.name = "Selver"
 
-    def get_items(self, _test: bool = False) -> list[Item]:
+    def get_items(self, sleep: float = 1, _test: bool = False) -> list[Item]:
         """
         Returns all the food items Selver web store has.
 
         :param _test: bool: if True, the method will return a list of items for testing purposes (smaller request size)
+        :param sleep: float: time to sleep between requests (seconds)
         """
         items: list[Item] = []
         category_ids = self._get_ids()
@@ -36,6 +38,7 @@ class Selver(Store):
 
         # get items from each chunk (10 categoryes at a time)
         for chunk in chunks:
+            time.sleep(sleep)
             items.extend(self._get_items_from_categories(chunk))
 
         return items
@@ -81,12 +84,16 @@ class Selver(Store):
             price = product["final_price_incl_tax"]
             base_price = product["unit_price"]
             quantity = price / base_price
-            unit = " ".join(
-                [
-                    x
-                    for x in product["product_volume"].split(" ")
-                    if x.isdigit() == False
-                ]
+            unit = (
+                " ".join(
+                    [
+                        x
+                        for x in product["product_volume"].split(" ")
+                        if x.isdigit() is False
+                    ]
+                )
+                if product["product_volume"]
+                else "each"
             )
 
             item = Item(

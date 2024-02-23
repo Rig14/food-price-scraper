@@ -1,6 +1,7 @@
 """Coop Store scraper."""
 
 import json
+import time
 import requests
 
 from src.util.item import Item
@@ -13,11 +14,12 @@ class Coop(Store):
     def __init__(self):
         self.name = "Coop"
 
-    def get_items(self, _test: bool = False) -> list[Item]:
+    def get_items(self, sleep: float = 1, _test: bool = False) -> list[Item]:
         """
         Returns all the food items Coop web store has.
 
         :param _test: bool: if True, the method will return a list of items for testing purposes (smaller request size)
+        :param sleep: float: time to sleep between requests (seconds)
         """
         categories = self._get_categories()
 
@@ -28,6 +30,7 @@ class Coop(Store):
             categories = dict(list(categories.items())[:2])
 
         for category_name, category_id in categories.items():
+            time.sleep(sleep)
             items.extend(self._get_items_from_category(category_name, category_id))
 
         return items
