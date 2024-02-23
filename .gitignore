@@ -1,3 +1,6 @@
+# tests folder json files
+src/tests/*.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
