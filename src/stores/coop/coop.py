@@ -13,11 +13,19 @@ class Coop(Store):
     def __init__(self):
         self.name = "Coop"
 
-    def get_items(self) -> list[Item]:
-        """Returns all the food items Coop web store has."""
+    def get_items(self, _test: bool = False) -> list[Item]:
+        """
+        Returns all the food items Coop web store has.
+
+        :param _test: bool: if True, the method will return a list of items for testing purposes (smaller request size)
+        """
         categories = self._get_categories()
 
         items = []
+
+        # if testing only get items from 2 categories
+        if _test:
+            categories = dict(list(categories.items())[:2])
 
         for category_name, category_id in categories.items():
             items.extend(self._get_items_from_category(category_name, category_id))

@@ -1,5 +1,7 @@
 """Coop store scraper tests."""
 
+import json
+import os
 import random
 import requests
 
@@ -13,6 +15,7 @@ category_name, category_id = list(categories.items())[
     random.randint(0, len(categories) - 1)
 ]
 items = coop._get_items_from_category(category_name, category_id)
+all_items = coop.get_items(_test=True)
 #################################
 
 
@@ -71,3 +74,26 @@ def test_item_image_link_works():
         assert response.status_code == 200
         assert response.headers["content-length"] is not None
         assert int(response.headers["content-length"]) > 0
+
+
+def test_get_items():
+    """Test get_items method returns valid data."""
+    assert len(all_items) > 0
+
+    for item in all_items:
+        assert item["name"] is not None
+        assert item["price"] > 0
+        assert item["unit"] is not None
+        assert item["quantity"] > 0
+        assert item["url"] is not None
+        assert item["base_price"] > 0
+        assert item["image"] is not None
+
+    # test that the url is valid for one of the items
+    response = requests.get(all_items[0]["url"])
+    assert response.status_code == 200
+
+    # write the items to a file for manual inspection
+    path = os.path.join(os.path.dirname(__file__), "coop_products.json")
+    with open(path, "w", encoding="UTF-8") as f:
+        f.write(json.dumps(items, indent=4))
