@@ -14,11 +14,14 @@ class Selver(Store):
     def __init__(self):
         self.name = "Selver"
 
-    def get_items(self, sleep: float = 1, _test: bool = False) -> list[Item]:
+    def get_items(
+        self, sleep: float = 1, _test: bool = False, _log: bool = False
+    ) -> list[Item]:
         """
         Returns all the food items Selver web store has.
 
         :param _test: bool: if True, the method will return a list of items for testing purposes (smaller request size)
+        :param _log: bool: if True, the method will print the progress of the requests
         :param sleep: float: time to sleep between requests (seconds)
         """
         items: list[Item] = []
@@ -37,8 +40,10 @@ class Selver(Store):
             chunks = [chunks[random.randint(0, len(chunks) - 1)]]
 
         # get items from each chunk
-        for chunk in chunks:
+        for idx, chunk in enumerate(chunks):
             time.sleep(sleep)
+            if _log:
+                print("[Selver]", str(idx) + " of " + len(chunks) + " chunks")
             items.extend(self._get_items_from_categories(chunk))
 
         return items

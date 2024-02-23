@@ -9,10 +9,10 @@ def main():
     coop = Coop()
     selver = Selver()
 
-    coop_items = coop.get_items(_test=True)
+    coop_items = coop.get_items(_log=True)
     store_items(coop_items)
 
-    selver_items = selver.get_items(_test=True)
+    selver_items = selver.get_items(_log=True)
     store_items(selver_items)
 
 
