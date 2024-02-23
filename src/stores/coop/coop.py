@@ -15,11 +15,14 @@ class Coop(Store):
     def __init__(self):
         self.name = "Coop"
 
-    def get_items(self, sleep: float = 1, _test: bool = False) -> list[Item]:
+    def get_items(
+        self, sleep: float = 1, _test: bool = False, _log: bool = False
+    ) -> list[Item]:
         """
         Returns all the food items Coop web store has.
 
         :param _test: bool: if True, the method will return a list of items for testing purposes (smaller request size)
+        :param _log: bool: if True, the method will print the progress of the requests
         :param sleep: float: time to sleep between requests (seconds)
         """
         categories = self._get_categories()
@@ -32,9 +35,13 @@ class Coop(Store):
             value = categories[random_key]
             categories = {random_key: value}
 
-        for category_name, category_id in categories.items():
+        for idx, (category_name, category_id) in enumerate(categories.items()):
             time.sleep(sleep)
-            items.extend(self._get_items_from_category(category_name, category_id))
+            if _log:
+                print("[Coop]", f"{idx + 1} of {len(categories)} categories")
+            items.extend(
+                self._get_items_from_category(category_name, category_id, sleep=sleep)
+            )
 
         return items
 
@@ -51,21 +58,24 @@ class Coop(Store):
         return categories
 
     def _get_items_from_category(
-        self, category_name: str, category_id: int
+        self, category_name: str, category_id: int, sleep: float = 1
     ) -> list[Item]:
         """Get all items from a category."""
-        url = f"https://api.vandra.ecoop.ee/supermarket/products?category={str(category_id)}&language=et&page="
+        page_url = f"https://api.vandra.ecoop.ee/supermarket/products?category={str(category_id)}&language=et&page="
 
         result: list[Item] = []
         # loop through all pages
         page_nr = 1
         while True:
             # request the page for products
-            response = requests.get(url + str(page_nr))
+            response = requests.get(page_url + str(page_nr))
             try:
                 data = response.json().get("data")
+                # if last page
+                if not data:
+                    break
             except json.JSONDecodeError:
-                break
+                pass
 
             for item in data:
                 name = item["name"]
@@ -90,11 +100,8 @@ class Coop(Store):
                         "image": image,
                     }
                 )
-
-            # if last page
-            if not data:
-                break
-
             page_nr += 1
+
+            time.sleep(sleep)
 
         return result
