@@ -43,8 +43,7 @@ class Coop(Store):
 
         data = response.json().get("data")
 
-        # keep only categories that are below id 70 (only food categories)
-        categories = {x["name"]: x["id"] for x in data if x["id"] < 70}
+        categories = {x["name"]: x["id"] for x in data}
 
         return categories
 
