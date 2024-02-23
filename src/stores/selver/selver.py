@@ -24,11 +24,11 @@ class Selver(Store):
         items: list[Item] = []
         category_ids = self._get_ids()
 
-        # split category_ids into chunks of 10
+        # split category_ids into chunks of 3
         chunks = []
-        for i in range(0, len(category_ids), 10):
+        for i in range(0, len(category_ids), 3):
             try:
-                chunks.append(category_ids[i : i + 10])
+                chunks.append(category_ids[i : i + 3])
             except IndexError:
                 chunks.append(category_ids[i:])
 
@@ -36,7 +36,7 @@ class Selver(Store):
         if _test:
             chunks = [chunks[random.randint(0, len(chunks) - 1)]]
 
-        # get items from each chunk (10 categoryes at a time)
+        # get items from each chunk
         for chunk in chunks:
             time.sleep(sleep)
             items.extend(self._get_items_from_categories(chunk))
@@ -89,7 +89,7 @@ class Selver(Store):
                     [
                         x
                         for x in product["product_volume"].split(" ")
-                        if x.isdigit() is False
+                        if x.replace(",", ".").isdigit() is False
                     ]
                 )
                 if product["product_volume"]
@@ -97,6 +97,7 @@ class Selver(Store):
             )
 
             item = Item(
+                store_name=self.name,
                 name=product["name"],
                 code=product["product_main_ean"],
                 price=price,

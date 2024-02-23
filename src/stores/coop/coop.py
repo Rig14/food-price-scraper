@@ -1,6 +1,7 @@
 """Coop Store scraper."""
 
 import json
+import random
 import time
 import requests
 
@@ -25,9 +26,11 @@ class Coop(Store):
 
         items = []
 
-        # if testing only get items from 2 categories
         if _test:
-            categories = dict(list(categories.items())[:2])
+            # if testing only get items from 1 category
+            random_key = list(categories.keys())[random.randint(0, len(categories) - 1)]
+            value = categories[random_key]
+            categories = {random_key: value}
 
         for category_name, category_id in categories.items():
             time.sleep(sleep)
