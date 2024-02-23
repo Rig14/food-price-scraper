@@ -43,7 +43,7 @@ class Selver(Store):
         for idx, chunk in enumerate(chunks):
             time.sleep(sleep)
             if _log:
-                print("[Selver]", str(idx) + " of " + len(chunks) + " chunks")
+                print("[Selver]", str(idx) + " of " + str(len(chunks)) + " chunks")
             items.extend(self._get_items_from_categories(chunk))
 
         return items
@@ -88,7 +88,7 @@ class Selver(Store):
         for product in products:
             price = product["final_price_incl_tax"]
             base_price = product["unit_price"]
-            quantity = price / base_price
+            quantity = price / base_price if price and base_price else None
             unit = (
                 " ".join(
                     [

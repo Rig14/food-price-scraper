@@ -82,7 +82,7 @@ class Coop(Store):
                 code = None  # Coop does not have barcodes in their API
                 price = item["price"]
                 base_price = item["base_price"]
-                quantity = price / base_price
+                quantity = price / base_price if base_price and price else None
                 unit = item["base_unit"]
                 url = f"https://vandra.ecoop.ee/et/toode/{item['id2']}-{item['slug']}"
                 image = item["image"]
